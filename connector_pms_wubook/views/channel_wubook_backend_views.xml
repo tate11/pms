@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2021 Eric Antones <eantones@nuobit.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="channel_wubook_backend_view_form" model="ir.ui.view">
+        <field name="name">channel.wubook.backend.form</field>
+        <field name="model">channel.wubook.backend</field>
+        <field name="arch" type="xml">
+            <form string="PMS Channel Backend" create="0">
+                <header />
+                <sheet>
+                    <group>
+                        <field name="username" />
+                        <field name="password" password="1" />
+                    </group>
+                    <group>
+                        <field name="url" />
+                        <field name="property_code" />
+                        <field name="pkey" />
+                    </group>
+                    <notebook>
+                        <page name="syncronization" string="Syncronization">
+                            <group>
+                                <button
+                                    name="import_room_types"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"
+                                />
+                            </group>
+                            <group>
+                                <button
+                                    name="export_room_types"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Export in background"
+                                />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
