@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 /.venv
 /.pytest_cache
+venv
 
 # C extensions
 *.so
@@ -73,3 +74,5 @@ docs/_build/
 
 # OCA rules
 !static/lib/
+
+venv/pyvenv.cfg
