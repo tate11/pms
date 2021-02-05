@@ -17,8 +17,11 @@
         "partner_contact_birthdate",
     ],
     "data": [
+        "data/code.ine.csv",
         "views/pms_checkin_partner_views.xml",
         "views/res_partner_views.xml",
+        "views/code_ine.xml",
+        "security/ir.model.access.csv",
     ],
     "installable": True,
 }
