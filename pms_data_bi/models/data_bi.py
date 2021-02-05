@@ -1,5 +1,3 @@
-
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -20,32 +18,34 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, api, _
-from datetime import date, datetime, timedelta
 import json
 import logging
+from datetime import date, datetime, timedelta
+
+from openerp import _, api, models
+
 _logger = logging.getLogger(__name__)
 
 
 def inv_percent_inc(amount, percent):
     """Return the amount to which a percentage was increment applied."""
-    return amount-(amount*(100 - percent))/100
+    return amount - (amount * (100 - percent)) / 100
 
 
 def inv_percent(amount, percent):
     """Return the amount to which a percentage was applied."""
-    return amount/((100-percent)/100)
+    return amount / ((100 - percent) / 100)
 
 
 class DataBi(models.Model):
     """Management and export data for MopSolution MyDataBI."""
 
-    _name = 'data_bi'
+    _name = "data_bi"
 
     @api.model
-    def export_data_bi(self,
-                       archivo=False,
-                       fechafoto=date.today().strftime('%Y-%m-%d')):
+    def export_data_bi(
+        self, archivo=False, fechafoto=date.today().strftime("%Y-%m-%d")
+    ):
         u"""Prepare a Json Objet to export data for MyDataBI.
 
         Generate a dicctionary to by send in JSON
@@ -72,26 +72,29 @@ class DataBi(models.Model):
         if type(fechafoto) is dict:
             fechafoto = date.today()
         else:
-            fechafoto = datetime.strptime(fechafoto, '%Y-%m-%d').date()
+            fechafoto = datetime.strptime(fechafoto, "%Y-%m-%d").date()
 
         _logger.info("--- ### Init Export Data_Bi Module ### ---")
         if not isinstance(archivo, int):
             archivo = 0
             dic_param = []
-            dic_param.append({'Archivo': archivo,
-                              'Fechafoto': fechafoto.strftime('%Y-%m-%d')})
+            dic_param.append(
+                {"Archivo": archivo, "Fechafoto": fechafoto.strftime("%Y-%m-%d")}
+            )
         # compan = self.env.user.company_id
         property = self.env.user.pms_property_id
-        limit_ago = (fechafoto - timedelta(
-            days=property.data_bi_days)).strftime('%Y-%m-%d')
+        limit_ago = (fechafoto - timedelta(days=property.data_bi_days)).strftime(
+            "%Y-%m-%d"
+        )
 
         dic_export = []  # Diccionario con todo lo necesario para exportar.
         if (archivo == 0) or (archivo == 7) or (archivo == 8):
-            room_types = self.env['pms.room.type'].search([])
+            room_types = self.env["pms.room.type"].search([])
         if (archivo == 0) or (archivo == 10) or (archivo == 6):
-            line_res = self.env['pms.reservation.line'].search(
-                                    [('date', '>=', limit_ago)], order="id")
-        estado_array = ['draft', 'confirm', 'booking', 'done', 'cancelled']
+            line_res = self.env["pms.reservation.line"].search(
+                [("date", ">=", limit_ago)], order="id"
+            )
+        estado_array = ["draft", "confirm", "booking", "done", "cancelled"]
 
         # state = fields.Selection(
         #     [
@@ -104,66 +107,64 @@ class DataBi(models.Model):
         #         ("no_checkout", "No Checkout"),
         #     ],
 
-
-
-
         # Debug Stop -------------------
         # import wdb
         # wdb.set_trace()
         # Debug Stop ------------------
 
-
         if (archivo == 0) or (archivo == 1):
             dic_tarifa = self.data_bi_tarifa(property.data_bi_id)
-            dic_export.append({'Tarifa': dic_tarifa})
+            dic_export.append({"Tarifa": dic_tarifa})
         if (archivo == 0) or (archivo == 2):
             dic_canal = self.data_bi_canal(property.data_bi_id)
-            dic_export.append({'Canal': dic_canal})
+            dic_export.append({"Canal": dic_canal})
         if (archivo == 0) or (archivo == 3):
             dic_hotel = self.data_bi_hotel(property)
-            dic_export.append({'Hotel': dic_hotel})
+            dic_export.append({"Hotel": dic_hotel})
         if (archivo == 0) or (archivo == 4):
             dic_pais = self.data_bi_pais(property.data_bi_id)
-            dic_export.append({'Pais': dic_pais})
+            dic_export.append({"Pais": dic_pais})
         if (archivo == 0) or (archivo == 5):
             dic_regimen = self.data_bi_regimen(property.data_bi_id)
-            dic_export.append({'Regimen': dic_regimen})
+            dic_export.append({"Regimen": dic_regimen})
         if (archivo == 0) or (archivo == 7):
             dic_capacidad = self.data_bi_capacidad(property.data_bi_id, room_types)
-            dic_export.append({'Capacidad': dic_capacidad})
+            dic_export.append({"Capacidad": dic_capacidad})
         if (archivo == 0) or (archivo == 8):
-            dic_tipo_habitacion = self.data_bi_habitacione(property.data_bi_id,
-                                                           room_types)
-            dic_export.append({'Tipo Habitación': dic_tipo_habitacion})
+            dic_tipo_habitacion = self.data_bi_habitacione(
+                property.data_bi_id, room_types
+            )
+            dic_export.append({"Tipo Habitación": dic_tipo_habitacion})
         if (archivo == 0) or (archivo == 9):
             dic_budget = self.data_bi_budget(property.data_bi_id)
-            dic_export.append({'Budget': dic_budget})
+            dic_export.append({"Budget": dic_budget})
         if (archivo == 0) or (archivo == 10):
             dic_bloqueos = self.data_bi_bloqueos(property.data_bi_id, line_res)
-            dic_export.append({'Bloqueos': dic_bloqueos})
+            dic_export.append({"Bloqueos": dic_bloqueos})
         if (archivo == 0) or (archivo == 11):
             dic_moti_bloq = self.data_bi_moti_bloq(property.data_bi_id)
-            dic_export.append({'Motivo Bloqueo': dic_moti_bloq})
+            dic_export.append({"Motivo Bloqueo": dic_moti_bloq})
         if (archivo == 0) or (archivo == 12):
             dic_segmentos = self.data_bi_segment(property.data_bi_id)
-            dic_export.append({'Segmentos': dic_segmentos})
+            dic_export.append({"Segmentos": dic_segmentos})
         if (archivo == 0) or (archivo == 13) or (archivo == 6):
             dic_clientes = self.data_bi_client(property.data_bi_id)
             if (archivo == 0) or (archivo == 13):
-                dic_export.append({'Clientes': dic_clientes})
+                dic_export.append({"Clientes": dic_clientes})
         if (archivo == 0) or (archivo == 14):
             dic_estados = self.data_bi_estados(property.data_bi_id, estado_array)
-            dic_export.append({'Estado Reservas': dic_estados})
+            dic_export.append({"Estado Reservas": dic_estados})
         if (archivo == 0) or (archivo == 15):
             dic_rooms = self.data_bi_rooms(property.data_bi_id)
-            dic_export.append({'Nombre Habitaciones': dic_rooms})
+            dic_export.append({"Nombre Habitaciones": dic_rooms})
         if (archivo == 0) or (archivo == 6):
-            dic_reservas = self.data_bi_reservas(property.data_bi_id,
-                                                 line_res,
-                                                 estado_array,
-                                                 dic_clientes,
-                                                 )
-            dic_export.append({'Reservas': dic_reservas})
+            dic_reservas = self.data_bi_reservas(
+                property.data_bi_id,
+                line_res,
+                estado_array,
+                dic_clientes,
+            )
+            dic_export.append({"Reservas": dic_reservas})
 
         dictionaryToJson = json.dumps(dic_export)
         _logger.warning("End Export Data_Bi Module to Json")
@@ -177,33 +178,52 @@ class DataBi(models.Model):
     def data_bi_tarifa(self, property_id):
         dic_tarifa = []  # Diccionario con las tarifas
         # tarifas = self.env['product.pricelist'].search_read([], ['name'])
-        tarifas = self.env['product.pricelist'].search_read(
-            ['|',('active', '=', False), ('active', '=', True)], ['name'])
+        tarifas = self.env["product.pricelist"].search_read(
+            ["|", ("active", "=", False), ("active", "=", True)], ["name"]
+        )
         _logger.info("DataBi: Calculating %s fees", str(len(tarifas)))
         for tarifa in tarifas:
-            dic_tarifa.append({'data_bi_id': property_id,
-                               'ID_Tarifa': tarifa['id'],
-                               'Descripcion': tarifa['name']})
+            dic_tarifa.append(
+                {
+                    "data_bi_id": property_id,
+                    "ID_Tarifa": tarifa["id"],
+                    "Descripcion": tarifa["name"],
+                }
+            )
         return dic_tarifa
 
     @api.model
     def data_bi_canal(self, property_id):
         _logger.info("DataBi: Calculating all channels")
         dic_canal = []  # Diccionario con los Canales
-        canal_array = ['Puerta', 'Mail', 'Telefono', 'Call Center', 'Web',
-                       'Agencia', 'Touroperador', 'Virtual Door', u'Desvío']
+        canal_array = [
+            "Puerta",
+            "Mail",
+            "Telefono",
+            "Call Center",
+            "Web",
+            "Agencia",
+            "Touroperador",
+            "Virtual Door",
+            u"Desvío",
+        ]
         for i in range(0, len(canal_array)):
-            dic_canal.append({'data_bi_id': property_id,
-                              'ID_Canal': i,
-                              'Descripcion': canal_array[i]})
+            dic_canal.append(
+                {
+                    "data_bi_id": property_id,
+                    "ID_Canal": i,
+                    "Descripcion": canal_array[i],
+                }
+            )
         return dic_canal
 
     @api.model
     def data_bi_hotel(self, property):
         _logger.info("DataBi: Calculating hotel names")
         dic_hotel = []  # Diccionario con el/los nombre de los hoteles
-        dic_hotel.append({'data_bi_id': property.data_bi_id,
-                          'Descripcion': property.name})
+        dic_hotel.append(
+            {"data_bi_id": property.data_bi_id, "Descripcion": property.name}
+        )
         return dic_hotel
 
     # @api.model
