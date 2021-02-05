@@ -1,8 +1,9 @@
 # Copyright 2019-2021 Jose Luis Algara (Alda hotels) <osotranquilo@gmail.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
 from datetime import date
+
+from odoo import api, fields, models
 
 
 def get_years():
@@ -16,17 +17,28 @@ def get_years():
 class Budget(models.Model):
     """Establish and save the budget for DataBI control by revenue"""
 
-    _name = 'pms.budget'
+    _name = "pms.budget"
 
     # fecha Primer día del mes
-    month = fields.Selection(string="Month",
-                             selection=[('1', 'January'), ('2', 'February'), ('3', 'March'),
-                              ('4', 'April'), ('5', 'May'), ('6', 'June'),
-                              ('7', 'July'), ('8', 'August'), ('9', 'September'),
-                              ('10', 'October'), ('11', 'November'),
-                              ('12', 'December'), ],
-                             required=True, )
-    year = fields.Selection(get_years(), string='Year', required=True)
+    month = fields.Selection(
+        string="Month",
+        selection=[
+            ("1", "January"),
+            ("2", "February"),
+            ("3", "March"),
+            ("4", "April"),
+            ("5", "May"),
+            ("6", "June"),
+            ("7", "July"),
+            ("8", "August"),
+            ("9", "September"),
+            ("10", "October"),
+            ("11", "November"),
+            ("12", "December"),
+        ],
+        required=True,
+    )
+    year = fields.Selection(get_years(), string="Year", required=True)
     room_nights = fields.Float("Room Nights", required=True, digits=(6, 2))
     # Número de Room Nights
     room_revenue = fields.Float("Room Revenue", required=True, digits=(6, 2))
@@ -42,8 +54,8 @@ class Budget(models.Model):
     # Pension_Revenue numérico con dos decimales Ingresos por Pensión
 
     @api.model
-    def export_data_bi(self,
-                       archivo=False,
-                       fechafoto=date.today().strftime('%Y-%m-%d')):
-        apidata = self.env['data_bi']
+    def export_data_bi(
+        self, archivo=False, fechafoto=date.today().strftime("%Y-%m-%d")
+    ):
+        apidata = self.env["data_bi"]
         return apidata.export_data_bi(self)

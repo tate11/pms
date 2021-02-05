@@ -1,22 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2019 Jose Luis Algara (Alda hotels) <osotranquilo@gmail.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
-
 <odoo>
 
     <act_window
-      id="budget_act_window"
-      name="Budget for DataBI"
-      res_model="pms.budget"
-      view_mode="tree,form"
+        id="budget_act_window"
+        name="Budget for DataBI"
+        res_model="pms.budget"
+        view_mode="tree,form"
     />
 
     <menuitem
-      id="budget_menu"
-      name="Budget for DataBI"
-      parent="pms.revenue_management_menu"
-      sequence="50"
-      action="budget_act_window"
+        id="budget_menu"
+        name="Budget for DataBI"
+        parent="pms.revenue_management_menu"
+        sequence="50"
+        action="budget_act_window"
     />
 
     <record model="ir.ui.view" id="budget_form_view">
@@ -28,13 +27,13 @@
                     <group string="Hotel Budget:" colspan="1">
                       <group name="group_top">
                           <group>
-                              <field name="month"/>
-                              <field name="year"/>
+                              <field name="month" />
+                              <field name="year" />
                           </group>
                           <group>
-                              <field name="room_nights"/>
-                              <field name="room_revenue"/>
-                              <field name="estancias"/>
+                              <field name="room_nights" />
+                              <field name="room_revenue" />
+                              <field name="estancias" />
                           </group>
                       </group>
                     </group>
@@ -43,7 +42,7 @@
 <!--                        groups="base.group_system"/>-->
 <!--                    </div>-->
                 </sheet>
-                <div class="oe_chatter"></div>
+                <div class="oe_chatter" />
             </form>
         </field>
     </record>
@@ -54,11 +53,11 @@
         <field name="model">pms.budget</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="month"/>
-                <field name="year"/>
-                <field name="room_nights"/>
-                <field name="room_revenue"/>
-                <field name="estancias"/>
+                <field name="month" />
+                <field name="year" />
+                <field name="room_nights" />
+                <field name="room_revenue" />
+                <field name="estancias" />
             </tree>
         </field>
     </record>
