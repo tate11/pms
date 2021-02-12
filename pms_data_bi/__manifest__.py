@@ -15,8 +15,7 @@
     "license": "AGPL-3",
     "author": "Jose Luis Algara (Alda hotels) <osotranquilo@gmail.com>",
     "website": "https://github.com/OCA/pms",
-    "depends": ["pms"],
-    # , 'hotel_l10n_es', 'hotel_channel_connector'],
+    "depends": ["pms", "pms_l10n_es"],
     "category": "Property Management System",
     "data": [
         "views/budget.xml",
