@@ -22,6 +22,7 @@ class TestResPartner(common.SavepointCase):
                 "gender": "male",
                 "document_type": "D",
                 "document_number": "30065089H",
+                "code_ine_id": "266",
             }
         )
         reservation_vals = {
@@ -86,6 +87,7 @@ class TestResPartner(common.SavepointCase):
                 "gender": "male",
                 "document_type": "D",
                 "document_number": "30065089H",
+                "code_ine_id": "266",
             }
         )
         reservation_vals = {
