@@ -1,5 +1,6 @@
 # Copyright 2017  Alexandre Díaz
 # Copyright 2017  Dario Lodeiros
+# Copyright 2021  Jose Luis Algara
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -26,6 +27,7 @@ class ProductTemplate(models.Model):
     )
     daily_limit = fields.Integer("Daily limit")
     is_extra_bed = fields.Boolean("Is extra bed", default=False)
+    is_crib = fields.Boolean("Is a baby crib", default=False)
     show_in_calendar = fields.Boolean(
         "Show in Calendar",
         default=False,

@@ -2921,6 +2921,11 @@ msgid "Is extra bed"
 msgstr "Es una cama supletoria"
 
 #. module: pms
+#: model:ir.model.fields,field_description:pms.field_product_template__is_crib
+msgid "Is a baby crib"
+msgstr "Es una cuna de bebe"
+
+#. module: pms
 #: code:addons/pms/models/pms_checkin_partner.py:0
 #, python-format
 msgid "It is not yet checkin day!"
