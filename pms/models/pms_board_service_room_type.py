@@ -54,12 +54,6 @@ class PmsBoardServiceRoomType(models.Model):
         required=False,
         ondelete="restrict",
     )
-    price_type = fields.Selection(
-        [("fixed", "Fixed"), ("percent", "Percent")],
-        string="Type",
-        default="fixed",
-        required=True,
-    )
     amount = fields.Float(
         "Amount", digits=("Product Price"), compute="_compute_board_amount", store=True
     )
