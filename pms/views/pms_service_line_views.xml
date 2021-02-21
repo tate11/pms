@@ -23,6 +23,7 @@
                 <field name="product_id" />
                 <field name="day_qty" />
                 <field name="date" />
+                <field name="price_unit" />
                 <field name="pms_property_id" invisible="1" />
             </tree>
         </field>
@@ -40,7 +41,6 @@
                 <field name="room_id" />
                 <field name="tax_ids" invisible="1" />
                 <field name="discount" />
-                <field name="price_total" />
             </tree>
         </field>
     </record>
