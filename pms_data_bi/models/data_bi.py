@@ -43,9 +43,10 @@ class DataBi(models.Model):
     _name = "data_bi"
 
     @api.model
-    def export_data_bi(
-        self, archivo=False, fechafoto=date.today().strftime("%Y-%m-%d")
-    ):
+    def export_data_bi(self,
+                       archivo=0,
+                       property=False,
+                       fechafoto=date.today().strftime("%Y-%m-%d")):
         u"""Prepare a Json Objet to export data for MyDataBI.
 
         Generate a dicctionary to by send in JSON
@@ -68,147 +69,160 @@ class DataBi(models.Model):
             archivo == 15 'Room names'
         fechafoto = start date to take data
         """
+        _logger.warning("--- ### Init Export Data_Bi Module parameters:  %s, %s, %s ### ---",
+                        archivo,
+                        property,
+                        fechafoto)
 
         if type(fechafoto) is dict:
             fechafoto = date.today()
         else:
             fechafoto = datetime.strptime(fechafoto, "%Y-%m-%d").date()
 
-        _logger.info("--- ### Init Export Data_Bi Module ### ---")
-        if not isinstance(archivo, int):
-            archivo = 0
-            dic_param = [{"Archivo": archivo, "Fechafoto": fechafoto.strftime("%Y-%m-%d")}]
-        # compan = self.env.user.company_id
-        property = self.env.user.pms_property_id
-        limit_ago = (fechafoto - timedelta(days=property.data_bi_days)).strftime(
-            "%Y-%m-%d"
-        )
+        propertys = self.env['pms.property'].search([])
+        if type(property) is int:
+            property = self.env['pms.property'].search([('id', '=', property)])
+            if len(property) == 1:
+                propertys = property
+
+        # limit_ago = (fechafoto - timedelta(days=property.data_bi_days)).strftime(
+        #     "%Y-%m-%d"
+        # )
+        limit_ago = (fechafoto - timedelta(days=60)).strftime("%Y-%m-%d")
 
         dic_export = []  # Diccionario con todo lo necesario para exportar.
+
+        for property in propertys:
+            _logger.warning("--- ### %s ### ---", property.name)
+
+        if (archivo == 0) or (archivo == 1):
+            dic_tarifa = self.data_bi_tarifa(propertys)
+            # _logger.warning("Longitud %s", len(dic_export))
+            dic_export.append({"Tarifa": dic_tarifa})
+
+        if (archivo == 0) or (archivo == 2):
+            dic_canal = self.data_bi_canal(propertys)
+            dic_export.append({"Canal": dic_canal})
+            # Debug Stop -------------------
+            import wdb
+            wdb.set_trace()
+            # Debug Stop ------------------
+
+
+        if (archivo == 0) or (archivo == 3):
+            dic_hotel = self.data_bi_hotel(property)
+            dic_export.append({"Hotel": dic_hotel})
+
+
+
+
+
+
         if (archivo == 0) or (archivo == 7) or (archivo == 8):
             room_types = self.env["pms.room.type"].search([])
+
+
+
         if (archivo == 0) or (archivo == 10) or (archivo == 6):
             line_res = self.env["pms.reservation.line"].search(
                 [("date", ">=", limit_ago)], order="id"
             )
         estado_array = ["draft", "confirm", "onboard", "done",
                         "cancelled", "no_show","no_checkout"]
-
-        # Debug Stop -------------------
-        # import wdb
-        # wdb.set_trace()
-        # Debug Stop ------------------
-
-        if (archivo == 0) or (archivo == 1):
-            dic_tarifa = self.data_bi_tarifa(property.data_bi_id)
-            dic_export.append({"Tarifa": dic_tarifa})
-        if (archivo == 0) or (archivo == 2):
-            dic_canal = self.data_bi_canal(property.data_bi_id)
-            dic_export.append({"Canal": dic_canal})
-        if (archivo == 0) or (archivo == 3):
-            dic_hotel = self.data_bi_hotel(property)
-            dic_export.append({"Hotel": dic_hotel})
         if (archivo == 0) or (archivo == 4):
-            dic_pais = self.data_bi_pais(property.data_bi_id)
+            dic_pais = self.data_bi_pais(property.id)
             dic_export.append({"Pais": dic_pais})
         if (archivo == 0) or (archivo == 5):
-            dic_regimen = self.data_bi_regimen(property.data_bi_id)
+            dic_regimen = self.data_bi_regimen(property.id)
             dic_export.append({"Regimen": dic_regimen})
         if (archivo == 0) or (archivo == 7):
-            dic_capacidad = self.data_bi_capacidad(property.data_bi_id, room_types)
+            dic_capacidad = self.data_bi_capacidad(property.id, room_types)
             dic_export.append({"Capacidad": dic_capacidad})
         if (archivo == 0) or (archivo == 8):
             dic_tipo_habitacion = self.data_bi_habitacione(
-                property.data_bi_id, room_types
+                property.id, room_types
             )
             dic_export.append({"Tipo Habitación": dic_tipo_habitacion})
         if (archivo == 0) or (archivo == 9):
-            dic_budget = self.data_bi_budget(property.data_bi_id)
+            dic_budget = self.data_bi_budget(property.id)
             dic_export.append({"Budget": dic_budget})
         if (archivo == 0) or (archivo == 10):
-            dic_bloqueos = self.data_bi_bloqueos(property.data_bi_id, line_res)
+            dic_bloqueos = self.data_bi_bloqueos(property.id, line_res)
             dic_export.append({"Bloqueos": dic_bloqueos})
         if (archivo == 0) or (archivo == 11):
-            dic_moti_bloq = self.data_bi_moti_bloq(property.data_bi_id)
+            dic_moti_bloq = self.data_bi_moti_bloq(property.id)
             dic_export.append({"Motivo Bloqueo": dic_moti_bloq})
         if (archivo == 0) or (archivo == 12):
-            dic_segmentos = self.data_bi_segment(property.data_bi_id)
+            dic_segmentos = self.data_bi_segment(property.id)
             dic_export.append({"Segmentos": dic_segmentos})
-        if (archivo == 0) or (archivo == 13) or (archivo == 6):
-            dic_clientes = self.data_bi_client(property.data_bi_id)
-            if (archivo == 0) or (archivo == 13):
-                dic_export.append({"Clientes": dic_clientes})
+        if (archivo == 0) or (archivo == 13):
+            dic_clientes = self.data_bi_client(property.id)
+            dic_export.append({"Clientes": dic_clientes})
         if (archivo == 0) or (archivo == 14):
-            dic_estados = self.data_bi_estados(property.data_bi_id, estado_array)
+            dic_estados = self.data_bi_estados(property.id, estado_array)
             dic_export.append({"Estado Reservas": dic_estados})
         if (archivo == 0) or (archivo == 15):
-            dic_rooms = self.data_bi_rooms(property.data_bi_id)
+            dic_rooms = self.data_bi_rooms(property.id)
             dic_export.append({"Nombre Habitaciones": dic_rooms})
         if (archivo == 0) or (archivo == 6):
             dic_reservas = self.data_bi_reservas(
-                property.data_bi_id,
+                property.id,
                 line_res,
                 estado_array,
-                dic_clientes,
             )
             dic_export.append({"Reservas": dic_reservas})
 
         dictionary_to_json = json.dumps(dic_export)
-        _logger.warning("End Export Data_Bi Module to Json")
-        # Debug Stop -------------------
-        # import wdb; wdb.set_trace()
-        # Debug Stop -------------------
-
+        _logger.warning("--- ### End Export Data_Bi Module to Json ### ---")
         return dictionary_to_json
 
     @api.model
-    def data_bi_tarifa(self, property_id):
-        dic_tarifa = []  # Diccionario con las tarifas
-        tarifas = self.env["product.pricelist"].search_read(
-            ["|", ("active", "=", False), ("active", "=", True)], ["name"]
-        )
-        _logger.info("DataBi: Calculating %s fees", str(len(tarifas)))
-        for tarifa in tarifas:
-            dic_tarifa.append(
-                {
-                    "ID_Hotel": property_id,
-                    "ID_Tarifa": tarifa["id"],
-                    "Descripcion": tarifa["name"],
-                }
-            )
+    def data_bi_tarifa(self, propertys):
+        # Diccionario con las tarifas
+        dic_tarifa = []
+        # tarifas = self.env["product.pricelist"].search_read(
+        #     ["|", ("active", "=", False), ("active", "=", True)], ["name"])
+        for property in propertys:
+            tarifas = self.env["product.pricelist"].search_read(
+                ["|", ("active", "=", False), ("active", "=", True), "|",
+                 ('pms_property_ids', '=', property.id), ('pms_property_ids', '=', False)], ["name"])
+            _logger.info("DataBi: Calculating %s fees", str(len(tarifas)))
+            for tarifa in tarifas:
+                dic_tarifa.append(
+                    {
+                        "ID_Hotel": property.id,
+                        "ID_Tarifa": tarifa["id"],
+                        "Descripcion": tarifa["name"],
+                    }
+                )
         return dic_tarifa
 
     @api.model
-    def data_bi_canal(self, property_id):
-        _logger.info("DataBi: Calculating all channels")
-        dic_canal = []  # Diccionario con los Canales
-        canal_array = [
-            "Puerta",
-            "Mail",
-            "Telefono",
-            "Call Center",
-            "Web",
-            "Agencia",
-            "Touroperador",
-            "Virtual Door",
-            u"Desvío",
-        ]
-        for i in range(0, len(canal_array)):
-            dic_canal.append(
-                {
-                    "ID_Hotel": property_id,
-                    "ID_Canal": i,
-                    "Descripcion": canal_array[i],
-                }
-            )
+    def data_bi_canal(self, propertys):------------------------------------
+        # Diccionario con los Canales
+        dic_canal = [{'ID_Hotel': property_id,
+                      'ID_Canal': "0",
+                      'Descripcion': u'Ninguno'}]
+        channels = self.env['pms.sale.channel'].search([])
+        _logger.info("DataBi: Calculating %s Channels", str(len(channels)))
+        for channel in channels:
+            dic_canal.append({'ID_Hotel': property_id,
+                              'ID_Canal': channel['id'],
+                              'Descripcion': channel['name']
+                              })
         return dic_canal
 
     @api.model
     def data_bi_hotel(self, property):
-        _logger.info("DataBi: Calculating hotel names")
+        # _logger.info("DataBi: Calculating hotel names")
         # Diccionario con el/los nombre de los hoteles
-        dic_hotel = [{"ID_Hotel": property.data_bi_id,
-                      "Descripcion": property.name}]
+        hoteles = self.env['pms.property'].search([])
+        _logger.info("DataBi: Calculating %s hotel names", str(len(hoteles)))
+
+        dic_hotel = []
+        for hotel in hoteles:
+            dic_hotel.append({"ID_Hotel": hotel.id,
+                              "Descripcion": hotel.name})
         return dic_hotel
 
     @api.model
@@ -324,38 +338,34 @@ class DataBi(models.Model):
                 dic_segmentos.append({'ID_Hotel': property_id,
                                       'ID_Segmento': linea.id,
                                       'Descripcion': seg_desc})
-            # else:
-            #     dic_segmentos.append({'ID_Hotel': property_id,
-            #                           'ID_Segmento': linea.id,
-            #                           'Descripcion': linea.name})
         return dic_segmentos
 
     @api.model
     def data_bi_client(self, property_id):
-    # Diccionario con Clientes (OTAs y agencias)
+        # Diccionario con Clientes (OTAs y agencias)
         dic_clientes = [{'ID_Hotel': property_id,
                          'ID_Cliente': 0,
                          'Descripcion': u'Ninguno'}]
-        lineas = self.env['pms.sale.channel'].search([])
-        _logger.info("DataBi: Calculating %s otas", str(len(lineas)))
-        id_cli_count = 1
-
-        for linea in lineas:
-            dic_clientes.append({'ID_Hotel': property_id,
-                                 'ID_Cliente': id_cli_count,
-                                 'Descripcion': linea.name})
-            id_cli_count += 1
-
         lineas = self.env['res.partner'].search([('is_agency', '=', True)])
         _logger.info("DataBi: Calculating %s Operators", str(len(lineas)))
         for linea in lineas:
             dic_clientes.append({'ID_Hotel': property_id,
-                                 'ID_Cliente': id_cli_count,
+                                 'ID_Cliente': linea.id,
                                  'Descripcion': linea.name})
-            id_cli_count += 1
-
         return dic_clientes
 
+    # @api.model
+    # def get_data_bi_client(self, linea, dic_clientes):
+    #     # return client in linea
+    #     cliente = 0
+    #     if linea.reservation_id.agency_id.name:
+    #         cliente = next((sub for sub in dic_clientes if sub['Descripcion'] == linea.reservation_id.agency_id.name), None)
+    #         cliente = cliente['ID_Cliente']
+    #     if linea.reservation_id.channel_type_id.name:
+    #         cliente = next((sub for sub in dic_clientes if sub['Descripcion'] == linea.reservation_id.channel_type_id.name),
+    #                        None)
+    #
+    #     return '0' if cliente == 0 else cliente['ID_Cliente']
 
 # def data_bi_client(self, property_id):
     #     # Diccionario con Clientes (OTAs y agencias)
@@ -418,14 +428,14 @@ class DataBi(models.Model):
     @api.model
     def data_bi_estados(self, property_id, estado_array):
         # Diccionario con los Estados Reserva
-        _logger.info("DataBi: Calculating all the states of the reserves")
+        _logger.info("DataBi: Calculating states of the reserves")
         dic_estados = []
         estado_array_txt = ['Borrador', 'Confirmada', 'Hospedandose',
                             'Checkout', 'Cancelada', 'No Show', 'No Checkout']
 
         for i in range(0, len(estado_array)):
             dic_estados.append({'ID_Hotel': property_id,
-                                'ID_EstadoReserva': i,
+                                'ID_EstadoReserva': str(i),
                                 'Descripcion': estado_array_txt[i]})
         return dic_estados
 
@@ -434,7 +444,7 @@ class DataBi(models.Model):
         # Diccionario con las habitaciones
         dic_rooms = []
         rooms = self.env['pms.room'].search_read([], ['name'])
-        _logger.info("DataBi: Adding the name of %s rooms.", str(len(rooms)))
+        _logger.info("DataBi: Calculating %s name rooms.", str(len(rooms)))
         for room in rooms:
             dic_rooms.append({'ID_Hotel': property_id,
                               'ID_Room': room['id'],
@@ -465,7 +475,7 @@ class DataBi(models.Model):
 
 
     @api.model
-    def data_bi_reservas(self, property_id, lines, estado_array, dic_clientes):
+    def data_bi_reservas(self, property_id, lines, estado_array):
         dic_reservas = []
         lineas = lines.filtered(
             lambda n:
@@ -481,17 +491,24 @@ class DataBi(models.Model):
                 id_segmen = linea.reservation_id.folio_id.segmentation_ids[0].id
             else:
                 id_segmen = 0
-            regimen = 0 if not linea.reservation_id.board_service_room_id else linea.reservation_id.board_service_room_id.id
-            _logger.info("DataBi: %s", linea.reservation_id.folio_id.name)
-            _logger.info("DataBi: Dato ID_EstadoReserva %s %s", estado_array.index(
-                         linea.reservation_id.state), linea.reservation_id.state)
-            _logger.info("DataBi: Dato ID_Regimen %s", regimen)
-            # Debug Stop -------------------
-            # import wdb
-            # wdb.set_trace()
-            # Debug Stop ------------------
-            # if linea.reservation_id.partner_id.code_ine_id:
-            _logger.info("DataBi: Dato codeine %s", self.data_bi_get_codeine(linea))
+            regimen = 0 if not linea.reservation_id.board_service_room_id else \
+                                linea.reservation_id.board_service_room_id.id
+            # _logger.info("DataBi: Dato ID_EstadoReserva %s %s", estado_array.index(
+            #              linea.reservation_id.state), linea.reservation_id.state)
+            # _logger.info("DataBi: %s", linea.reservation_id.folio_id.name)
+            # _logger.info("DataBi: Dato ID_Regimen %s", regimen)
+            # # if linea.reservation_id.partner_id.code_ine_id:
+            # _logger.info("DataBi: Dato codeine %s", self.data_bi_get_codeine(linea))
+            cuna = 0
+            for service in linea.reservation_id.service_ids:
+                if service.product_id.is_crib:
+                    cuna += 1
+
+            canal = linea.reservation_id.channel_type_id.id if \
+                        linea.reservation_id.channel_type_id.id else 0
+
+            cliente = linea.reservation_id.agency_id.id if \
+                        linea.reservation_id.agency_id.id else 0
 
             dic_reservas.append({
                     'ID_Reserva': linea.reservation_id.folio_id.id,
@@ -500,8 +517,8 @@ class DataBi(models.Model):
                                                     linea.reservation_id.state),
                     'FechaVenta': linea.reservation_id.create_date.strftime('%Y-%m-%d'),
                     'ID_Segmento': id_segmen,
-                    # 'ID_Cliente': self.data_bi_channel_cli(linea, dic_clientes),
-                    # 'ID_Canal': channels[linea.reservation_id.channel_type],
+                    'ID_Cliente': cliente,
+                    'ID_Canal': canal,
                     'FechaExtraccion': date.today().strftime('%Y-%m-%d'),
                     'Entrada': linea.date.strftime('%Y-%m-%d'),
                     'Salida': (linea.date + timedelta(days=1)).strftime("%Y-%m-%d"),
@@ -511,7 +528,7 @@ class DataBi(models.Model):
                     'ID_Regimen': regimen,
                     'Adultos': linea.reservation_id.adults,
                     'Menores': linea.reservation_id.children,
-                    # 'Cunas': cuna,
+                    'Cunas': cuna,
                     # 'PrecioDiario': precio_neto,
                     # 'PrecioComision': precio_comision,
                     # 'PrecioIva': precio_iva,
@@ -524,7 +541,7 @@ class DataBi(models.Model):
                     })
             if linea.reservation_id.state == 'cancelled':
                 dic_reservas[-1]['FechaCancelacion'] = \
-                    linea.reservation_id.last_updated_res[:10]
+                        linea.reservation_id.write_date.strftime('%Y-%m-%d')
                 # _logger.info("DataBi: %s CANCELADA %s",
                 #              dic_reservas[-1]['Entrada'],
                 #              dic_reservas[-1]['ID_Folio'])
@@ -546,9 +563,24 @@ class DataBi(models.Model):
             # Cunas numérico Nro. de cunas
             # PrecioDiario numérico con 2 decimales Precio por noche de la reserva
             # ID_Tarifa numérico Código de la tarifa aplicada a la reserva
-            # ID_Pais numérico Código del país
+            # ID_Pais alfanumérico Código del país
 
         return dic_reservas
+
+    @api.model
+    def data_bi_get_codeine(self, reserva):
+        response = 'NONE'
+        if reserva.reservation_id.partner_id.code_ine_id:
+            response = reserva.reservation_id.partner_id.code_ine_id.code
+        else:
+            for l in reserva.reservation_id.folio_id.checkin_partner_ids:
+                if l.partner_id.code_ine_id.code:
+                    response = l.partner_id.code_ine_id.code
+        return response
+
+
+
+
 # @api.model
     # def data_bi_reservas(self, property_id, lines, estado_array, dic_clientes):
     #     dic_reservas = []
@@ -882,16 +914,3 @@ class DataBi(models.Model):
     #         json_promo = 'NONE'
     #     return [json_rate, comi_rate, json_promo, json_pay_model]
     #
-    @api.model
-    def data_bi_get_codeine(self, reserva):
-        response = 'NONE'
-        if reserva.reservation_id.partner_id.code_ine_id:
-            response = reserva.reservation_id.partner_id.code_ine_id.code
-        else:
-            for l in reserva.reservation_id.folio_id.checkin_partner_ids:
-                if l.partner_id.code_ine_id.code:
-                    response = l.partner_id.code_ine_id.code
-        return response
-        # Debug Stop -------------------
-        # import wdb; wdb.set_trace()
-        # Debug Stop -------------------

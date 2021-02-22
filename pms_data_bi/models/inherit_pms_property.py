@@ -7,12 +7,12 @@ from odoo import fields, models
 class InheritResCompany(models.Model):
     _inherit = "pms.property"
 
-    data_bi_id = fields.Integer(
-        "Unique ID for DataBI",
-        default=0,
-        help="It must be unique to be able to identify the hotel, \
-        within a hotel group.",
-    )
+    # data_bi_id = fields.Integer(
+    #     "Unique ID for DataBI",
+    #     default=0,
+    #     help="It must be unique to be able to identify the hotel, \
+    #     within a hotel group.",
+    # )
     expedia_rate = fields.Integer(
         "Expedia Rate DataBI",
         default=18,
