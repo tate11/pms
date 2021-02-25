@@ -28,7 +28,7 @@ uid = common.authenticate(db, username, password, {})
 
 models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
 
-models.execute_kw(db, uid, password,'data_bi','export_data_bi', [ 8, '2018-01-01'])
+models.execute_kw(db, uid, password,'data_bi','export_data_bi', [ 8, 1, '2018-01-01'])
 
 In the parameters of export_data_bi:
 
@@ -60,9 +60,11 @@ archivo == 13 'Clientes'
 
 archivo == 14 'Estado Reservas'
 
+company_id == company's id or False for all
+
 fechafoto = start date to take data
 
-in the example recive 8 'Tipo Habitación' from '2018-01-01'
+in the example recive 8 'Tipo Habitación' from company_id 1 from '2018-01-01'
 
 
 Credits

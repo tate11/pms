@@ -4,7 +4,7 @@
 {
     "name": "PMS Data Bi",
     "description": """
-        Export hotel data for business intelligence
+        Export hotel data for Business Intelligence
 
     To use this module you need to:
 

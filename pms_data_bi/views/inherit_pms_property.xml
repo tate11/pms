@@ -12,7 +12,6 @@
                 <xpath expr="//page[@name='property_rooms']" position="after">
                     <page string="DataBi MOP" name="property_databi">
                         <group>
-<!--                            <field name="data_bi_id" />-->
                             <field name="data_bi_days" />
                             <field name="expedia_rate" />
                         </group>

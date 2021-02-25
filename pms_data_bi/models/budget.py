@@ -52,10 +52,16 @@ class Budget(models.Model):
     # iD_Segmento numérico Código del Segmento
     # ID_Cliente numérico Código del Cliente
     # Pension_Revenue numérico con dos decimales Ingresos por Pensión
+    pms_property_id = fields.Many2one(
+        "pms.property",
+        required=True,
+        ondelete="restrict",
+        default=lambda self: self.env.user.get_active_property_ids()[0],
+    )
 
-    @api.model
-    def export_data_bi(
-        self, archivo=False, fechafoto=date.today().strftime("%Y-%m-%d")
-    ):
-        apidata = self.env["data_bi"]
-        return apidata.export_data_bi(self)
+    # @api.model
+    # def export_data_bi(
+    #     self, archivo=False, fechafoto=date.today().strftime("%Y-%m-%d")
+    # ):
+    #     apidata = self.env["data_bi"]
+    #     return apidata.export_data_bi(self)

@@ -26,6 +26,9 @@
                 <sheet>
                     <group string="Hotel Budget:" colspan="1">
                       <group name="group_top">
+                          <group colspan="4" col="2">
+                              <field name="pms_property_id" />
+                          </group>
                           <group>
                               <field name="month" />
                               <field name="year" />
@@ -37,10 +40,6 @@
                           </group>
                       </group>
                     </group>
-<!--                    <div>-->
-<!--                        <button name="export_data_bi" class="oe_form_button_save btn btn-primary btn-sm" type="object" string="Generate Conexion"-->
-<!--                        groups="base.group_system"/>-->
-<!--                    </div>-->
                 </sheet>
                 <div class="oe_chatter" />
             </form>
@@ -53,6 +52,7 @@
         <field name="model">pms.budget</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="pms_property_id" />
                 <field name="month" />
                 <field name="year" />
                 <field name="room_nights" />
