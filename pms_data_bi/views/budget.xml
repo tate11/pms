@@ -62,4 +62,33 @@
         </field>
     </record>
 
+    <record id="view_filter_budget" model="ir.ui.view">
+        <field name="model">pms.budget</field>
+        <field name="arch" type="xml">
+            <search string="Budget filters">
+                <field name="pms_property_id" />
+                <field name="year" />
+
+                <searchpanel>
+                    <field
+                        name="pms_property_id"
+                        string="Property"
+                        enable_counters="1"
+                        select="multi"
+                        icon="fa-bed"
+                    />
+                    <field
+                        name="year"
+                        string="Year"
+                        enable_counters="1"
+                        select="multi"
+                        icon="fa-calendar"
+                    />
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+
+
 </odoo>
