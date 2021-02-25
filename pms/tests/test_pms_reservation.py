@@ -26,7 +26,9 @@ class TestPmsReservations(TestHotel):
         )
 
         # create room type class
-        self.room_type_class = self.env["pms.room.type.class"].create({"name": "Room"})
+        self.room_type_class = self.env["pms.room.type.class"].create(
+            {"name": "Room", "code_class": "ROOM"}
+        )
 
         # create room type
         self.room_type_double = self.env["pms.room.type"].create(
@@ -659,6 +661,7 @@ class TestPmsReservations(TestHotel):
                 "pms_property_id": self.property.id,
             }
         )
+        r1.flush()
         checkin = self.env["pms.checkin.partner"].create(
             {
                 "partner_id": host.id,
@@ -722,9 +725,7 @@ class TestPmsReservations(TestHotel):
         # ACT
         res.action_cancel()
         # ASSERT
-        self.assertEqual(res.state,
-                         'cancelled',
-                         "The reservation should be cancelled")
+        self.assertEqual(res.state, "cancelled", "The reservation should be cancelled")
 
     @freeze_time("1981-11-01")
     def test_reservation_action_checkout(self):
@@ -749,6 +750,7 @@ class TestPmsReservations(TestHotel):
                 "pms_property_id": self.property.id,
             }
         )
+        r1.flush()
         checkin = self.env["pms.checkin.partner"].create(
             {
                 "partner_id": host.id,
@@ -756,11 +758,12 @@ class TestPmsReservations(TestHotel):
             }
         )
         checkin.action_on_board()
+        checkin.flush()
 
         # ACT
         r1.action_reservation_checkout()
 
         # ASSERT
-        self.assertEqual(r1.state,
-                         "done",
-                         "The reservation status should be done after checkout.")
+        self.assertEqual(
+            r1.state, "done", "The reservation status should be done after checkout."
+        )
