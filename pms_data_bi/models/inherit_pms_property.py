@@ -16,11 +16,3 @@ class InheritResCompany(models.Model):
         Expedia company, expressed with two digits. \
         Example: 18 = 18% commission.",
     )
-    data_bi_days = fields.Integer(
-        "Days to download",
-        default=60,
-        required=True,
-        digits=3,
-        help="Number of days, which are downloaded data, \
-        backwards, by default are 60 days to download.",
-    )

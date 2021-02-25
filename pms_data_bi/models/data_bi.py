@@ -84,11 +84,10 @@ class DataBi(models.Model):
             if len(property) == 1:
                 propertys = property
 
-        # limit_ago = (fechafoto - timedelta(days=property.data_bi_days)).strftime(
-        #     "%Y-%m-%d"
-        # )
-        limit_ago = (fechafoto - timedelta(days=60)).strftime("%Y-%m-%d")
+        dias = self.env.user.data_bi_days
+        limit_ago = (fechafoto - timedelta(days=dias)).strftime("%Y-%m-%d")
 
+        _logger.info("Export Data %s days ago. From %s",dias, limit_ago)
         estado_array = ["draft", "confirm", "onboard", "done",
                         "cancelled", "no_show", "no_checkout"]
 
