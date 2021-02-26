@@ -327,17 +327,18 @@ class DataBi(models.Model):
         lineas = self.env['room.closure.reason'].search([])
         dic_moti_bloq = []
         _logger.info("DataBi: Calculating %s blocking reasons", str(len(lineas)))
-        # bloqeo_array = ['Staff', _('Out of Service')]
-        # TODO Staff???
         for property in propertys:
             dic_moti_bloq.append({'ID_Hotel': property.id,
-                                  'ID_Motivo_Bloqueo': 0,
+                                  'ID_Motivo_Bloqueo': "B0",
                                   'Descripcion': u'Ninguno'})
+            dic_moti_bloq.append({'ID_Hotel': property.id,
+                                  'ID_Motivo_Bloqueo': "ST",
+                                  'Descripcion': u'Staff'})
             for linea in lineas:
                 if (not linea.pms_property_ids) or (
                         property.id in linea.pms_property_ids.ids):
                     dic_moti_bloq.append({'ID_Hotel': property.id,
-                                          'ID_Motivo_Bloqueo': linea.id,
+                                          'ID_Motivo_Bloqueo': "B"+str(linea.id),
                                           'Descripcion': linea.name})
         return dic_moti_bloq
 
@@ -479,21 +480,21 @@ class DataBi(models.Model):
             lambda n: (n.reservation_id.reservation_type != 'normal') and (
                 n.reservation_id.state != 'cancelled'))
         _logger.info("DataBi: Calculating %s Bloqued", str(len(lines)))
-
-        # TODO sistema de motivos de bloqueo REVISAR STAFF
         for line in lines:
-            # if line.reservation_id.reservation_type == 'out':
-            #     id_m_b = 1
-            # else:
-            #     id_m_b = 0
+
             if line.pms_property_id.id in propertys.ids:
-                motivo = 0 if not line.reservation_id.closure_reason_id.id else line.reservation_id.closure_reason_id.id
+                motivo = "0"
+                if line.reservation_id.reservation_type == 'out':
+                    motivo = "B0" if not line.reservation_id.closure_reason_id.id else (
+                        "B"+str(line.reservation_id.closure_reason_id.id))
+
+                elif line.reservation_id.reservation_type == 'staff':
+                    motivo = "ST"
                 dic_bloqueos.append({
                     'ID_Hotel': line.pms_property_id.id,
                     'Fecha_desde': line.date.strftime("%Y-%m-%d"),
                     'Fecha_hasta': (line.date + timedelta(days=1)).strftime("%Y-%m-%d"),
                     'ID_Tipo_Habitacion': line.reservation_id.room_type_id.id,
-                    # 'ID_Motivo_Bloqueo': id_m_b,
                     'ID_Motivo_Bloqueo': motivo,
                     'Nro_Habitaciones': 1})
         return dic_bloqueos
