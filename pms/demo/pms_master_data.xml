@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data noupdate="1">
-        <!-- Multi pms Demo -->
+        <!-- Company -->
         <record id="pms_company1" model="res.company">
             <field name="name">Pms Company</field>
             <field name="currency_id" ref="base.EUR" />
@@ -11,12 +11,42 @@
                 eval="obj()._get_default_favicon(original=True)"
             />
         </record>
+        <!--Availability Plan -->
         <record
             id="demo_pms_room_type_availability"
             model="pms.room.type.availability.plan"
         >
             <field name="name">Availability Plan Demo</field>
         </record>
+        <!-- Sequence -->
+        <record model="ir.sequence" id="seq_pms_folio2">
+            <field name="name">PMS Folio 2</field>
+            <field name="code">pms.folio</field>
+            <field name="prefix">F/%(y)s</field>
+            <field name="suffix">%(sec)s</field>
+            <field name="padding">4</field>
+            <field name="company_id" ref="pms_company1" />
+        </record>
+
+        <record model="ir.sequence" id="seq_pms_reservation2">
+            <field name="name">PMS Reservation 2</field>
+            <field name="code">pms.reservation</field>
+            <field name="prefix">R/%(y)s</field>
+            <field name="suffix">%(sec)s</field>
+            <field name="padding">4</field>
+            <field name="company_id" ref="pms_company1" />
+        </record>
+
+        <record model="ir.sequence" id="seq_pms_checkin2">
+            <field name="name">PMS Checkin 2</field>
+            <field name="code">pms.checkin.partner</field>
+            <field name="prefix">C/%(y)s</field>
+            <field name="suffix">%(sec)s</field>
+            <field name="padding">4</field>
+            <field name="company_id" ref="pms_company1" />
+        </record>
+
+        <!--Properties-->
         <record id="demo_pms_property" model="pms.property">
             <field name="name">My pms Demo</field>
             <field name="company_id" ref="base.main_company" />
@@ -33,15 +63,15 @@
             <field name="checkin_sequence_id" ref="pms.seq_pms_checkin" />
             <field name="reservation_sequence_id" ref="pms.seq_pms_reservation" />
         </record>
-        <record id="demo_pms_property3" model="pms.property">
+       <record id="demo_pms_property3" model="pms.property">
             <field name="name">Independent property </field>
             <field name="company_id" ref="pms_company1" />
             <field name="default_pricelist_id" ref="product.list0" />
-            <field name="folio_sequence_id" ref="pms.seq_pms_folio" />
-            <field name="checkin_sequence_id" ref="pms.seq_pms_checkin" />
-            <field name="reservation_sequence_id" ref="pms.seq_pms_reservation" />
+            <field name="folio_sequence_id" ref="pms.seq_pms_folio2" />
+            <field name="checkin_sequence_id" ref="pms.seq_pms_checkin2" />
+            <field name="reservation_sequence_id" ref="pms.seq_pms_reservation2" />
         </record>
-        <!-- users -->
+        <!--  users -->
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4,ref('pms.group_pms_user'))]" />
             <field name="company_id" ref="base.main_company" />
