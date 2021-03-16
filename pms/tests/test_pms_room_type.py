@@ -12,26 +12,26 @@ class TestRoomType(SavepointCase):
         self.m1 = self.p1.company_id
         self.folio_sequence = self.env["ir.sequence"].create(
             {
-                'name': "PMS Folio",
-                'code': 'pms.folio',
-                'padding': 4,
-                'company_id': self.m1.id,
+                "name": "PMS Folio",
+                "code": "pms.folio",
+                "padding": 4,
+                "company_id": self.m1.id,
             }
         )
         self.reservation_sequence = self.env["ir.sequence"].create(
             {
-                'name': "PMS Reservation",
-                'code': 'pms.reservation',
-                'padding': 4,
-                'company_id': self.m1.id,
+                "name": "PMS Reservation",
+                "code": "pms.reservation",
+                "padding": 4,
+                "company_id": self.m1.id,
             }
         )
         self.checkin_sequence = self.env["ir.sequence"].create(
             {
-                'name': "PMS Checkin",
-                'code': 'pms.checkin.partner',
-                'padding': 4,
-                'company_id': self.m1.id,
+                "name": "PMS Checkin",
+                "code": "pms.checkin.partner",
+                "padding": 4,
+                "company_id": self.m1.id,
             }
         )
         self.p2 = self.env["pms.property"].create(
@@ -39,9 +39,9 @@ class TestRoomType(SavepointCase):
                 "name": "p2",
                 "company_id": self.m1.id,
                 "default_pricelist_id": self.ref("product.list0"),
-                'folio_sequence_id': self.folio_sequence.id,
-                'reservation_sequence_id': self.reservation_sequence.id,
-                'checkin_sequence_id': self.checkin_sequence.id,
+                "folio_sequence_id": self.folio_sequence.id,
+                "reservation_sequence_id": self.reservation_sequence.id,
+                "checkin_sequence_id": self.checkin_sequence.id,
             }
         )
         self.m2 = self.env["res.company"].create(
@@ -51,26 +51,26 @@ class TestRoomType(SavepointCase):
         )
         self.folio_sequence2 = self.env["ir.sequence"].create(
             {
-                'name': "PMS Folio",
-                'code': 'pms.folio',
-                'padding': 4,
-                'company_id': self.m2.id,
+                "name": "PMS Folio",
+                "code": "pms.folio",
+                "padding": 4,
+                "company_id": self.m2.id,
             }
         )
         self.reservation_sequence2 = self.env["ir.sequence"].create(
             {
-                'name': "PMS Reservation",
-                'code': 'pms.reservation',
-                'padding': 4,
-                'company_id': self.m2.id,
+                "name": "PMS Reservation",
+                "code": "pms.reservation",
+                "padding": 4,
+                "company_id": self.m2.id,
             }
         )
         self.checkin_sequence2 = self.env["ir.sequence"].create(
             {
-                'name': "PMS Checkin",
-                'code': 'pms.checkin.partner',
-                'padding': 4,
-                'company_id': self.m2.id,
+                "name": "PMS Checkin",
+                "code": "pms.checkin.partner",
+                "padding": 4,
+                "company_id": self.m2.id,
             }
         )
         self.p3 = self.env["pms.property"].create(
@@ -78,9 +78,9 @@ class TestRoomType(SavepointCase):
                 "name": "p3",
                 "company_id": self.m2.id,
                 "default_pricelist_id": self.ref("product.list0"),
-                'folio_sequence_id': self.folio_sequence2.id,
-                'reservation_sequence_id': self.reservation_sequence2.id,
-                'checkin_sequence_id': self.checkin_sequence2.id,
+                "folio_sequence_id": self.folio_sequence2.id,
+                "reservation_sequence_id": self.reservation_sequence2.id,
+                "checkin_sequence_id": self.checkin_sequence2.id,
             }
         )
         self.p4 = self.env["pms.property"].create(
@@ -88,9 +88,9 @@ class TestRoomType(SavepointCase):
                 "name": "p4",
                 "company_id": self.m2.id,
                 "default_pricelist_id": self.ref("product.list0"),
-                'folio_sequence_id': self.folio_sequence2.id,
-                'reservation_sequence_id': self.reservation_sequence2.id,
-                'checkin_sequence_id': self.checkin_sequence2.id,
+                "folio_sequence_id": self.folio_sequence2.id,
+                "reservation_sequence_id": self.reservation_sequence2.id,
+                "checkin_sequence_id": self.checkin_sequence2.id,
             }
         )
 
@@ -113,7 +113,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
             self.env["pms.room.type"].create(
                 {
                     "name": "Room type r1",
-                    "code_type": "c1",
+                    "default_code": "c1",
                     "pms_property_ids": [(6, 0, [self.p1.id])],
                     "company_id": self.m1.id,
                     "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -141,7 +141,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
             self.env["pms.room.type"].create(
                 {
                     "name": "Room type r1",
-                    "code_type": "c1",
+                    "default_code": "c1",
                     "pms_property_ids": [(6, 0, [self.p1.id])],
                     "company_id": self.m2.id,
                     "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -168,7 +168,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
             self.env["pms.room.type"].create(
                 {
                     "name": "Room type r1",
-                    "code_type": "c1",
+                    "default_code": "c1",
                     "pms_property_ids": [(6, 0, [self.p1.id, self.p3.id])],
                     "company_id": self.m2.id,
                     "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -192,7 +192,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
             self.env["pms.room.type"].create(
                 {
                     "name": "Room type r1",
-                    "code_type": "c1",
+                    "default_code": "c1",
                     "pms_property_ids": [(6, 0, [self.p1.id, self.p3.id])],
                     "company_id": False,
                     "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -222,7 +222,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -237,7 +237,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
             self.env["pms.room.type"].create(
                 {
                     "name": "Room type r1",
-                    "code_type": "c1",
+                    "default_code": "c1",
                     "pms_property_ids": [(6, 0, [self.p1.id])],
                     "company_id": False,
                     "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -264,7 +264,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -279,7 +279,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
             self.env["pms.room.type"].create(
                 {
                     "name": "Room type r1",
-                    "code_type": "c1",
+                    "default_code": "c1",
                     "pms_property_ids": [(6, 0, [self.p1.id])],
                     "company_id": self.m1.id,
                     "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -307,7 +307,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id])],
                 "company_id": self.m1.id,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -322,7 +322,7 @@ class TestRoomTypeCodePropertyIntegrity(TestRoomType):
             self.env["pms.room.type"].create(
                 {
                     "name": "Room type r1",
-                    "code_type": "c1",
+                    "default_code": "c1",
                     "pms_property_ids": [(6, 0, [self.p1.id, self.p2.id, self.p3.id])],
                     "company_id": False,
                     "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -347,7 +347,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         r1 = self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id, self.p3.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -355,7 +355,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p1.id, "c1"
         )
 
@@ -378,7 +378,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         r1 = self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id, self.p3.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -386,7 +386,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p1.id, "c1"
         )
 
@@ -409,7 +409,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id, self.p2.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -417,7 +417,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p3.id, "c1"
         )
 
@@ -438,7 +438,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         r1 = self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": False,
                 "company_id": self.m1.id,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -446,7 +446,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p1.id, "c1"
         )
 
@@ -468,7 +468,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": False,
                 "company_id": self.m1.id,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -476,7 +476,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p3.id, "c1"
         )
 
@@ -503,7 +503,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         r1 = self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id, self.p3.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -513,7 +513,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r2",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": False,
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -521,7 +521,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p1.id, "c1"
         )
 
@@ -548,7 +548,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -557,7 +557,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         r2 = self.env["pms.room.type"].create(
             {
                 "name": "Room type r2",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": False,
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -565,7 +565,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p2.id, "c1"
         )
 
@@ -592,7 +592,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -601,7 +601,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         r2 = self.env["pms.room.type"].create(
             {
                 "name": "Room type r2",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": False,
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -609,7 +609,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p3.id, "c1"
         )
 
@@ -636,7 +636,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -646,7 +646,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r2",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": False,
                 "company_id": self.m1.id,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -654,7 +654,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p3.id, "c1"
         )
 
@@ -681,7 +681,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -690,7 +690,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         r2 = self.env["pms.room.type"].create(
             {
                 "name": "Room type r2",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": False,
                 "company_id": self.m2.id,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -698,7 +698,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p3.id, "c1"
         )
 
@@ -729,7 +729,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r1",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": [(6, 0, [self.p1.id])],
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -739,7 +739,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.env["pms.room.type"].create(
             {
                 "name": "Room type r2",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": False,
                 "company_id": self.m1.id,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -748,7 +748,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         r3 = self.env["pms.room.type"].create(
             {
                 "name": "Room type r3",
-                "code_type": "c1",
+                "default_code": "c1",
                 "pms_property_ids": False,
                 "company_id": False,
                 "class_id": self.ref("pms.pms_room_type_class_0"),
@@ -756,7 +756,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         )
 
         # ACT
-        room_type = self.env["pms.room.type"].get_unique_by_property_code(
+        room_type = self.env["pms.room.type"].get_room_types_by_property(
             self.p3.id, "c1"
         )
 
@@ -781,7 +781,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
             r = self.env["pms.room.type"].create(
                 {
                     "name": "Room Type",
-                    "code_type": "c1",
+                    "default_code": "c1",
                     "class_id": room_type_class.id,
                     "pms_property_ids": [
                         (4, self.p2.id),
@@ -798,7 +798,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
         self.room_type = self.env["pms.room.type"].create(
             {
                 "name": "Room Type",
-                "code_type": "Type1",
+                "default_code": "Type1",
                 "pms_property_ids": self.p3,
                 "class_id": self.room_type_class.id,
             }
@@ -829,7 +829,7 @@ class TestRoomTypeCodePropertyUniqueness(TestRoomType):
             self.env["pms.room.type"].create(
                 {
                     "name": "Room Type",
-                    "code_type": "Type1",
+                    "default_code": "Type1",
                     "class_id": self.room_type_class.id,
                     "pms_property_ids": [self.p4.id],
                     "room_amenity_ids": [self.amenity.id],
